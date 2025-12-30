@@ -28,6 +28,13 @@ class BinaryTree:
                 queue.append(current.right)
         print()
 
+    # Nouvelle méthode pour affichage en profondeur (pré-ordre)
+    def display_depth_first(self, node):
+        if node:
+            print(node.value, end=' ')
+            self.display_depth_first(node.left)
+            self.display_depth_first(node.right)
+
 class NaryTree:
     def __init__(self):
         self.root = None
@@ -382,15 +389,16 @@ def main():
             else:
                 print("Sous-arbre non trouvé.")
         elif choice == 14:
-            bin_tree = tree.to_binary_tree()
-            if bin_tree:
-                print("Arbre binaire transformé :")
-                bin_tree.display_breadth_first()
+            if tree.root:  # Vérifier si l'arbre n'est pas vide
+                print("Arbre n-aire actuel (en profondeur, avant transformation) :")
+                tree.display_depth_first(tree.root)
+                print()
+                bin_tree = tree.to_binary_tree()
+                print("Arbre binaire transformé (en profondeur, après transformation) :")
+                bin_tree.display_depth_first(bin_tree.root)
+                print()
             else:
-                print("Arbre vide, transformation impossible.")
-            # Affichage automatique après transformation
-            print("Arbre n-aire original après transformation :")
-            tree.display_breadth_first()
+                print("impossible de faire l'opération")
         elif choice == 15:
             print("Fin du programme.")
             break
