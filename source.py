@@ -32,7 +32,7 @@ class NaryTree:
     def __init__(self):
         self.root = None
 
-    # Construction d'un arbre n-aire
+    # Construction d'un arbre n-aire (aléatoire, comme avant)
     def construct_tree(self, values):
         if not values:
             return None
@@ -49,6 +49,30 @@ class NaryTree:
                     index += 1
                 else:
                     break
+
+    # Construction d'un arbre complet (nouveau)
+    def construct_complete_tree(self):
+        # Arbre 4-aire complet : hauteur 3, 21 nœuds
+        values = [f'F{i}' for i in range(21)]
+        self.root = Node(values[0])  # Racine
+        queue = [self.root]
+        index = 1
+        level = 0
+        nodes_per_level = [1, 4, 16]  # Nombre de nœuds par niveau pour hauteur 3
+        while index < len(values) and level < len(nodes_per_level):
+            current_level_nodes = []
+            for _ in range(nodes_per_level[level]):
+                if queue:
+                    current = queue.pop(0)
+                    current_level_nodes.append(current)
+            for node in current_level_nodes:
+                for _ in range(4):  # Exactement 4 enfants par nœud interne
+                    if index < len(values):
+                        child = Node(values[index])
+                        node.children.append(child)
+                        queue.append(child)
+                        index += 1
+            level += 1
 
     # Affichage de l'arbre en largeur
     def display_breadth_first(self):
@@ -184,7 +208,7 @@ class NaryTree:
         bin_tree.root = convert(self.root)
         return bin_tree
 
-# Fonctions de construction d'arbres
+# Fonctions de construction d'arbres (aléatoires, comme avant)
 def constArbre10():
     return construct_tree_with_values(10)
 
@@ -209,26 +233,27 @@ def construct_tree_with_values(n):
     tree.construct_tree(values)
     return tree
 
-# Menu de démarrage
+# Menu de démarrage (mis à jour)
 def main():
     tree = NaryTree()
 
     while True:
         print("\nMenu:")
-        print("1. Construire un arbre")
-        print("2. Afficher l'arbre (Largeur)")
-        print("3. Afficher l'arbre (Profondeur)")
-        print("4. Calculer la hauteur de l'arbre")
-        print("5. Rechercher une information")
-        print("6. Insérer un nœud")
-        print("7. Modifier un nœud")
-        print("8. Supprimer un nœud")
-        print("9. Afficher un sous-arbre")
-        print("10. Vérifier si l'arbre est complet")
-        print("11. Trouver un sous-arbre complet maximal")
-        print("12. Extraire un sous-arbre")
-        print("13. Transformer en arbre binaire")
-        print("14. Quitter")
+        print("1. Construire un arbre (4-aire aléatoire)")
+        print("2. Construire un arbre (4-aire complet)")
+        print("3. Afficher l'arbre (Largeur)")
+        print("4. Afficher l'arbre (Profondeur)")
+        print("5. Calculer la hauteur de l'arbre")
+        print("6. Rechercher une information")
+        print("7. Insérer un nœud")
+        print("8. Modifier un nœud")
+        print("9. Supprimer un nœud")
+        print("10. Afficher un sous-arbre")
+        print("11. Vérifier si l'arbre est complet")
+        print("12. Trouver un sous-arbre complet maximal")
+        print("13. Extraire un sous-arbre")
+        print("14. Transformer en arbre binaire")
+        print("15. Quitter")
 
         choice = int(input("Choisissez une option: "))
         if choice == 1:
@@ -256,46 +281,53 @@ def main():
             else:
                 print("Choix invalide.")
             # Affichage automatique après construction
-            print("Arbre construit :")
+            print("Arbre construit (aléatoire) :")
             tree.display_breadth_first()
 
         elif choice == 2:
+            tree = NaryTree()
+            tree.construct_complete_tree()
+            # Affichage automatique après construction
+            print("Arbre construit (complet, 21 nœuds, hauteur 3) :")
             tree.display_breadth_first()
+
         elif choice == 3:
+            tree.display_breadth_first()
+        elif choice == 4:
             print("Affichage en profondeur:")
             tree.display_depth_first(tree.root)
             print()
-        elif choice == 4:
+        elif choice == 5:
             height = tree.height(tree.root)
             print(f"Hauteur de l'arbre: {height}")
-        elif choice == 5:
+        elif choice == 6:
             value = input("Entrez la valeur à rechercher: ")
             node = tree.search(tree.root, value)
             if node:
                 print(f"Nœud trouvé: {node.value}")
             else:
                 print("Nœud non trouvé.")
-        elif choice == 6:
+        elif choice == 7:
             parent_value = input("Entrez la valeur du parent: ")
             new_value = input("Entrez la valeur du nouveau nœud: ")
             tree.insert(parent_value, new_value)
             # Affichage automatique après insertion
             print("Arbre après insertion :")
             tree.display_breadth_first()
-        elif choice == 7:
+        elif choice == 8:
             old_value = input("Entrez la valeur du nœud à modifier: ")
             new_value = input("Entrez la nouvelle valeur: ")
             tree.modify_node(old_value, new_value)
             # Affichage automatique après modification
             print("Arbre après modification :")
             tree.display_breadth_first()
-        elif choice == 8:
+        elif choice == 9:
             value = input("Entrez la valeur du nœud à supprimer: ")
             tree.delete_node(value)
             # Affichage automatique après suppression
             print("Arbre après suppression :")
             tree.display_breadth_first()
-        elif choice == 9:
+        elif choice == 10:
             value = input("Entrez la valeur du nœud dont vous voulez afficher le sous-arbre: ")
             subtree = tree.extract_subtree(value)
             if subtree:
@@ -303,7 +335,7 @@ def main():
                 subtree.display_breadth_first()
             else:
                 print("Sous-arbre non trouvé.")
-        elif choice == 10:
+        elif choice == 11:
             start_time = time.perf_counter()  # Changé pour plus de précision
             if tree.is_complete():
                 print("L'arbre est complet.")
@@ -320,7 +352,7 @@ def main():
                 print(f"Le temps d'exécution est de {execution_time_us:.2f} µs.")
             else:  # < 1 µs
                 print(f"Le temps d'exécution est de {execution_time_ns:.0f} ns.")
-        elif choice == 11:
+        elif choice == 12:
             start_time = time.perf_counter()  # Changé pour plus de précision
             subtree = tree.find_max_complete_subtree()
             if subtree:
@@ -341,7 +373,7 @@ def main():
             # Affichage automatique après recherche
             print("Arbre après recherche du sous-arbre complet maximal :")
             tree.display_breadth_first()
-        elif choice == 12:
+        elif choice == 13:
             value = input("Entrez la valeur du nœud à extraire: ")
             subtree = tree.extract_subtree(value)
             if subtree:
@@ -349,7 +381,7 @@ def main():
                 tree = subtree  # Mettre à jour l'arbre principal avec le sous-arbre extrait
             else:
                 print("Sous-arbre non trouvé.")
-        elif choice == 13:
+        elif choice == 14:
             bin_tree = tree.to_binary_tree()
             if bin_tree:
                 print("Arbre binaire transformé :")
@@ -359,7 +391,7 @@ def main():
             # Affichage automatique après transformation
             print("Arbre n-aire original après transformation :")
             tree.display_breadth_first()
-        elif choice == 14:
+        elif choice == 15:
             print("Fin du programme.")
             break
         else:
