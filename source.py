@@ -196,24 +196,34 @@ class NaryTree:
             return new_tree
         return None
 
-    # Transformer en arbre binaire
+     # Transformer l'arbre n-aire en arbre binaire
     def to_binary_tree(self):
         if not self.root:
             return None
-        def convert(node):
-            if not node:
-                return None
-            bin_node = BinaryNode(node.value)
-            if node.children:
-                bin_node.left = convert(node.children[0])  # Premier enfant comme fils gauche
-                current = bin_node.left
-                for child in node.children[1:]:  # Les autres comme frères droits
-                    current.right = convert(child)
-                    current = current.right
-            return bin_node
-        bin_tree = BinaryTree()
-        bin_tree.root = convert(self.root)
-        return bin_tree
+        
+        # Créer la racine de l'arbre binaire
+        binary_tree = BinaryTree()
+        binary_tree.root = self._transform_to_binary(self.root)
+        return binary_tree
+    
+    def _transform_to_binary(self, nary_node):
+        if not nary_node:
+            return None
+        
+        # Créer un nœud binaire à partir du nœud n-aire
+        binary_node = BinaryNode(nary_node.value)
+        
+        # Convertir le premier fils en enfant gauche
+        if nary_node.children:
+            binary_node.left = self._transform_to_binary(nary_node.children[0])
+        
+        # Parcourir les frères
+        current = binary_node.left
+        for sibling in nary_node.children[1:]:
+            current.right = self._transform_to_binary(sibling)
+            current = current.right
+        
+        return binary_node
 
 # Fonctions de construction d'arbres (aléatoires, comme avant)
 def constArbre10():
@@ -390,15 +400,17 @@ def main():
                 print("Sous-arbre non trouvé.")
         elif choice == 14:
             if tree.root:  # Vérifier si l'arbre n'est pas vide
-                print("Arbre n-aire actuel (en profondeur, avant transformation) :")
-                tree.display_depth_first(tree.root)
-                print()
-                bin_tree = tree.to_binary_tree()
-                print("Arbre binaire transformé (en profondeur, après transformation) :")
-                bin_tree.display_depth_first(bin_tree.root)
-                print()
+                binary_tree = tree.to_binary_tree()
+                
+                # Affichage des résultats
+                print("Arbre binaire résultant (en largeur) :")
+                binary_tree.display_breadth_first()
+                
+                print("Arbre binaire résultant (en profondeur) :")
+                binary_tree.display_depth_first(binary_tree.root)
+                print()  # Pour une nouvelle ligne
             else:
-                print("impossible de faire l'opération")
+                print("Impossible de faire l'opération.")
         elif choice == 15:
             print("Fin du programme.")
             break
